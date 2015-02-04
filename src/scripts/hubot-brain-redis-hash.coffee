@@ -20,7 +20,7 @@ Redis = require "redis"
 
 # sets up hooks to persist the brain into redis.
 module.exports = (robot) ->
-  info   = Url.parse process.env.REDISTOGO_URL || process.env.BOXEN_REDIS_URL || 'redis://localhost:6379'
+  info   = Url.parse process.env.REDIS_URL || process.env.REDISTOGO_URL || process.env.BOXEN_REDIS_URL || 'redis://localhost:6379'
   client = Redis.createClient(info.port, info.hostname)
   oldkeys = {}
 
@@ -37,7 +37,7 @@ module.exports = (robot) ->
       if err
         throw err
       else if reply
-        robot.logger.info "Brain data retrieved from redis-brain storage"
+        robot.logger.info "Brain data retrieved from redis-hash-brain storage"
         results = {}
         oldkeys = {}
         for key in Object.keys(reply)
@@ -45,7 +45,7 @@ module.exports = (robot) ->
           oldkeys[key] = 1
         robot.brain.mergeData results
       else
-        robot.logger.info "Initializing new redis-brain storage"
+        robot.logger.info "Initializing new redis-hash-brain storage"
         robot.brain.mergeData {}
 
       robot.logger.info "Enabling brain auto-saving"
